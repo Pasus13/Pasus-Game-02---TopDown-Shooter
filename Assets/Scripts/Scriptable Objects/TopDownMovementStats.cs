@@ -14,7 +14,7 @@ public class TopDownMovementStats : ScriptableObject
 
     [Header("Dash")]
     public float dashSpeed = 15f;         // Dash movement speed
-    public float dashDuration = 0.1f;    // How long the dash lasts in seconds
+    public float dashDuration = 0.1f;     // How long the dash lasts in seconds
     public float dashCooldown = 1f;       // Time before you can dash again
 }
 
