@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WeaponStats
   m_EditorClassIdentifier: 
   weaponType: 0
-  bulletSpeed: 20
+  bulletSpeed: 10
   bulletLifetime: 2
   bulletDamage: 1
   fireRate: 5

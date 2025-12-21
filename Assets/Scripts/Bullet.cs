@@ -21,16 +21,21 @@ public class Bullet : MonoBehaviour
         _rb.linearVelocity = direction.normalized * speed;
 
         // Destroy bullet after its lifetime
-        Destroy(gameObject, _lifetime);
+        //Destroy(gameObject, _lifetime);
+        Destroy(gameObject, 10);
     }
 
     // Optional: handle collision here
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Example: you could check for enemy tag and deal damage
-        // Then destroy the bullet
-        // Destroy(gameObject);
+        Enemy enemy = other.GetComponentInParent<Enemy>();
+        if (enemy != null)
+        {
+            enemy.TakeDamage(_damage);
+            Destroy(gameObject);
+        }
     }
+
 }
 

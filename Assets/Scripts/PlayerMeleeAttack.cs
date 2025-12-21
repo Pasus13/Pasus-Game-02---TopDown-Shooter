@@ -80,7 +80,7 @@ public class PlayerMeleeAttack : MonoBehaviour
         // --- DAMAGE / HITBOX SETUP ---
         if (_swordHitbox != null)
         {
-            _swordHitbox.damage = weaponStats.swordDamage;
+            _swordHitbox.Damage = weaponStats.swordDamage;
             _swordHitbox.CanHit = true;
         }
 
