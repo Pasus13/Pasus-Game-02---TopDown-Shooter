@@ -19,5 +19,9 @@ MonoBehaviour:
   fireRate: 5
   isAutomatic: 1
   swordRange: 1
-  swordAttackDuration: 0.2
+  swordRangeMultiplier: 1
+  swordSweepAngle: 120
+  swordAttackDuration: 0.15
+  swordAttackDurationMultiplier: 1
+  swordCooldown: 1
   swordDamage: 5

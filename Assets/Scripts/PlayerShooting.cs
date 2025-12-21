@@ -72,11 +72,7 @@ public class PlayerShooting : MonoBehaviour
             return;
         }
 
-        Vector2 mouseScreenPos = InputManager.MouseScreenPosition;
-        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
-        mouseWorldPos.z = 0f;
-
-        Vector2 shootDirection = (mouseWorldPos - firePoint.position).normalized;
+        Vector2 shootDirection = firePoint.right;
 
         // Instantiate bullet
         GameObject bulletGO = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);

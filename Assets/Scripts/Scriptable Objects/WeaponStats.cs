@@ -20,7 +20,12 @@ public class WeaponStats : ScriptableObject
 
     [Header("Melee Only")]
     public float swordRange = 1f;
+    public float swordRangeMultiplier = 0f;
+    public float swordSweepAngle = 90f;
     public float swordAttackDuration = 0.2f;
-    public float swordDamage = 5f;
+    public float swordAttackDurationMultiplier = 0f;
+    public float swordCooldown = 1f;
+    public int swordDamage = 5;
+    
 }
 
