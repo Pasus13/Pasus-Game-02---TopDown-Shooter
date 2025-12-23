@@ -17,6 +17,7 @@ public class SwordHitbox : MonoBehaviour
         if (enemy != null)
         {
             enemy.TakeDamage(Damage);
+            enemy.ApplyKnockback();
         }
 
         // For now, just debug
