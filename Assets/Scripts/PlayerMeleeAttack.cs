@@ -73,15 +73,17 @@ public class PlayerMeleeAttack : MonoBehaviour
         // --- RANGE SETUP ---
         float rangeMultiplier = Mathf.Max(weaponStats.swordRangeMultiplier, 0.01f);
         Vector3 scaled = _baseSlashScale;
-        // Slash length is along local X axis
+        // We rescale sword and slash efect base on rangeMultiplayer
         scaled.x = _baseSlashScale.x * rangeMultiplier;
+
         swordSlashTransform.localScale = scaled;
+        swordSlashVFX.transform.localScale = scaled;
 
         // --- DAMAGE / HITBOX SETUP ---
         if (_swordHitbox != null)
         {
             _swordHitbox.Damage = weaponStats.swordDamage;
-            _swordHitbox.CanHit = true;
+            _swordHitbox.BeginSwing();
         }
 
         // --- SWEEP PARAMETERS ---
@@ -125,7 +127,7 @@ public class PlayerMeleeAttack : MonoBehaviour
         // --- DISABLE HITBOX ---
         if (_swordHitbox != null)
         {
-            _swordHitbox.CanHit = false;
+            _swordHitbox.EndSwing();
         }
 
         // --- DISABLE VISUAL & RESET TRANSFORM ---

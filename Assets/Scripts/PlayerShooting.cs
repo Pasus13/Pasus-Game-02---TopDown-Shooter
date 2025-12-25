@@ -82,16 +82,11 @@ public class PlayerShooting : MonoBehaviour
         float angle = (Mathf.Atan2(shootDirection.y, shootDirection.x) * Mathf.Rad2Deg) + bulletRotationAdjusment;
         bulletGO.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-        // Initialize bullet parameters (speed, lifetime, damage)
+        // Initialize bullet parameters
         Bullet bullet = bulletGO.GetComponent<Bullet>();
         if (bullet != null)
         {
-            bullet.Initialize(
-                shootDirection,
-                weaponStats.bulletSpeed,
-                weaponStats.bulletLifetime,
-                weaponStats.bulletDamage
-            );
+            bullet.Initialize(shootDirection, weaponStats);
         }
 
         // Set fire cooldown based on fireRate (bullets/sec)

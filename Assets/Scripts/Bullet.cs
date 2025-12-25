@@ -15,36 +15,33 @@ public class Bullet : MonoBehaviour
 
     }
 
-    public void Initialize(Vector2 direction, float speed, float lifetime, int damage)
+    public void Initialize(Vector2 direction, WeaponStats weaponStats)
     {
-        _damage = damage;
-        _lifetime = lifetime;
+        _damage = weaponStats.bulletDamage;
+        _lifetime = weaponStats.bulletLifetime;
 
         // Set bullet velocity
-        _rb.linearVelocity = direction.normalized * speed;
+        _rb.linearVelocity = direction.normalized * weaponStats.bulletSpeed;
 
         // Destroy bullet after its lifetime
-        //Destroy(gameObject, _lifetime);
-        Destroy(gameObject, 10);
+        Destroy(gameObject, _lifetime);
     }
-
-    // Optional: handle collision here
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Enemy enemy = other.GetComponentInParent<Enemy>();
-        if (enemy != null)
+        IDamageable damageable = other.GetComponentInParent<IDamageable>();
+
+        if (damageable != null)
         {
-            enemy.TakeDamage(_damage);
-            //enemy.ApplyHitSlow();
+            damageable.TakeDamage(_damage);
 
             // Knockback
-            KnockbackReceiver kb = enemy.GetComponent<KnockbackReceiver>();
+            IKnockbackable knockbackable = other.GetComponentInParent<IKnockbackable>();
 
-            if (kb != null)
+            if (knockbackable != null)
             {
-                Vector2 dir = (enemy.transform.position - transform.position).normalized;
-                kb.ApplyKnockback(dir, _weaponStats.bulletKnockbackForce, _weaponStats.bulletKnockbackDuration);
+                Vector2 dir = (other.transform.position - transform.position).normalized;
+                knockbackable.ApplyKnockback(dir, _weaponStats.bulletKnockbackForce, _weaponStats.bulletKnockbackDuration);
             }
 
             Destroy(gameObject);

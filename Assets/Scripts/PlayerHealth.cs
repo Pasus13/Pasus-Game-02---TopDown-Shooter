@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour, IDamageable
 {
     [Header("Health Settings")]
     [SerializeField] private int maxHealth = 5;
@@ -44,9 +44,6 @@ public class PlayerHealth : MonoBehaviour
 
         _currentHealth -= amount;
         _currentHealth = Mathf.Max(_currentHealth, 0);
-
-        // Debug
-        Debug.Log($"[PlayerHealth] Player took {amount} damage. HP: {_currentHealth}/{maxHealth}");
 
         OnHealthChanged?.Invoke(_currentHealth, maxHealth);
 

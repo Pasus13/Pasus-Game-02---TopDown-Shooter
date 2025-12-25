@@ -1,9 +1,7 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections;
-using static UnityEngine.GraphicsBuffer;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamageable
 {
     public static int EnemiesAliveCount { get; private set; }
 
@@ -108,16 +106,21 @@ public class Enemy : MonoBehaviour
         if (playerHealth != null)
         {
             playerHealth.TakeDamage(damage);
-
             // Get knockback on the player, not on the enemy
-            KnockbackReceiver playerKnockback = playerHealth.GetComponent<KnockbackReceiver>();
-            if (playerKnockback != null)
-            {
-                // Direction from enemy -> player (player gets pushed away)
-                Vector2 dir = (playerHealth.transform.position - transform.position).normalized;
+            IKnockbackable playerKnockbackable = other.GetComponentInParent<IKnockbackable>();
 
-                playerKnockback.ApplyKnockback(dir);
-                _enemyKnockback.ApplyKnockback(-dir);
+            if (playerKnockbackable != null)
+            {
+                
+                // Direction from enemy -> player (player gets pushed away)
+                Vector2 dir = (playerHealth.transform.position - transform.position).normalized;                
+                _enemyKnockback.ApplyKnockback(-dir, weaponStats.swordKnockbackForce, weaponStats.swordKnockbackDuration);
+                Debug.Log(other.transform.root.gameObject);
+                if (other.CompareTag("Player"))
+                {
+                    playerKnockbackable.ApplyKnockback(dir, weaponStats.swordKnockbackForce, weaponStats.swordKnockbackDuration);
+                }
+                
             }
         }
     }
@@ -129,9 +132,6 @@ public class Enemy : MonoBehaviour
             return;
 
         _currentHealth -= amount;
-
-        // Optional: debug log
-        Debug.Log($"[EnemyHealth] {gameObject.name} took {amount} damage. HP: {_currentHealth}/{maxHealth}");
 
         if (_currentHealth <= 0)
         {

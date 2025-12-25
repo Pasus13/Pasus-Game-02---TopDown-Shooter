@@ -18,12 +18,10 @@ MonoBehaviour:
   bulletDamage: 1
   fireRate: 5
   isAutomatic: 1
-  slowMultiplier: 0.5
-  slowDuration: 0.3
-  slowRampInTime: 0.1
-  slowRampOutTime: 0.2
+  bulletKnockbackForce: 2
+  bulletKnockbackDuration: 0.15
   swordRange: 1
-  swordRangeMultiplier: 1.5
+  swordRangeMultiplier: 3
   swordSweepAngle: 120
   swordAttackDuration: 0.15
   swordAttackDurationMultiplier: 1

@@ -128,7 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 79833073}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 96771361}
   - component: {fileID: 96771362}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Blade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -369,7 +369,7 @@ GameObject:
   - component: {fileID: 494929815}
   - component: {fileID: 494929816}
   - component: {fileID: 494929817}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: SwordSlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -405,6 +405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe79de1ef9e082f4d80ff6f3380bc431, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponStats: {fileID: 11400000, guid: 9c5205d46882f7641ad82880f6ded700, type: 2}
   Damage: 5
 --- !u!61 &494929817
 BoxCollider2D:
@@ -461,7 +462,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 567651058}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -492,7 +493,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 588086974}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Sprites
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -691,7 +692,7 @@ GameObject:
   m_Component:
   - component: {fileID: 730014598}
   - component: {fileID: 730014599}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -971,7 +972,7 @@ GameObject:
   - component: {fileID: 1100288810}
   - component: {fileID: 1100288812}
   - component: {fileID: 1100288811}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: SlashVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6017,7 +6018,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1275501127}
   - component: {fileID: 1275501128}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Triangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6103,7 +6104,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1471189756}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6266,7 +6267,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1537284902}
   - component: {fileID: 1537284903}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6353,7 +6354,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1574442360}
   - component: {fileID: 1574442361}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Hexagon Flat Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6478,9 +6479,9 @@ GameObject:
   - component: {fileID: 1777118780}
   - component: {fileID: 1777118781}
   - component: {fileID: 1777118782}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6647,7 +6648,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1810168820}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Colliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1,35 +1,51 @@
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 public class SwordHitbox : MonoBehaviour
 {
-    [Tooltip("Damage dealt by this sword hit.")]
-    public int Damage = 5;
+    [SerializeField] private WeaponStats weaponStats;
 
-    // This flag tells if the hitbox is currently active for dealing damage
+    [Tooltip("Damage dealt by this sword hit.")]
+    public int Damage;
+
     public bool CanHit { get; set; }
+
+    private readonly HashSet<Enemy> _hitThisSwing = new HashSet<Enemy>();
+
+    // Call this at the start of each sword attack
+    public void BeginSwing()
+    {
+        _hitThisSwing.Clear();
+        CanHit = true;
+    }
+
+    // Call this at the end of each sword attack
+    public void EndSwing()
+    {
+        CanHit = false;
+        _hitThisSwing.Clear();
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!CanHit)
-            return;
+        if (!CanHit) return;
 
         Enemy enemy = other.GetComponentInParent<Enemy>();
-        WeaponStats weaponStats = other.GetComponent<WeaponStats>();
+        if (enemy == null) return;
 
-        if (enemy != null)
+        // Prevent multiple hits during the same swing
+        if (_hitThisSwing.Contains(enemy)) return;
+
+        _hitThisSwing.Add(enemy);
+        enemy.TakeDamage(weaponStats.swordDamage);
+
+        // Knockback
+        IKnockbackable knockbackable = enemy.GetComponent<IKnockbackable>();
+        if (knockbackable != null)
         {
-            enemy.TakeDamage(Damage);
-
-            // Knockback
-            KnockbackReceiver kb = enemy.GetComponent<KnockbackReceiver>();
-            if (kb != null)
-            {
-                Vector2 dir = (enemy.transform.position - transform.position).normalized;
-                kb.ApplyKnockback(dir, weaponStats.swordKnockbackForce, weaponStats.swordKnockbackDuration);
-            }
+            Vector2 dir = (enemy.transform.position - transform.position).normalized;
+            knockbackable.ApplyKnockback(dir, weaponStats.swordKnockbackForce, weaponStats.swordKnockbackDuration);
         }
-
-        // For now, just debug
-        Debug.Log($"[SwordHitbox] Hit {other.name} for {Damage} damage.");
     }
 }

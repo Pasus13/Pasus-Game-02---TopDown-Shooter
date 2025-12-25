@@ -1,8 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
-public class KnockbackReceiver : MonoBehaviour
+public class KnockbackReceiver : MonoBehaviour, IKnockbackable
 {
     [Header("Knockback Settings")]
     [SerializeField] private float defaultForce;
@@ -21,7 +20,7 @@ public class KnockbackReceiver : MonoBehaviour
 
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody2D>();
+        _rb = GetComponentInParent<Rigidbody2D>();
 
         if (recoveryCurve == null || recoveryCurve.length == 0)
         {
