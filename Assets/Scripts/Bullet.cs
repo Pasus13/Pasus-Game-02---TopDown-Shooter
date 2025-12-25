@@ -3,6 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Bullet : MonoBehaviour
 {
+    [SerializeField] private WeaponStats _weaponStats;
+
     private Rigidbody2D _rb;
     private int _damage;
     private float _lifetime;
@@ -10,6 +12,7 @@ public class Bullet : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+
     }
 
     public void Initialize(Vector2 direction, float speed, float lifetime, int damage)
@@ -33,7 +36,16 @@ public class Bullet : MonoBehaviour
         if (enemy != null)
         {
             enemy.TakeDamage(_damage);
-            enemy.ApplyHitSlow();
+            //enemy.ApplyHitSlow();
+
+            // Knockback
+            KnockbackReceiver kb = enemy.GetComponent<KnockbackReceiver>();
+
+            if (kb != null)
+            {
+                Vector2 dir = (enemy.transform.position - transform.position).normalized;
+                kb.ApplyKnockback(dir, _weaponStats.bulletKnockbackForce, _weaponStats.bulletKnockbackDuration);
+            }
 
             Destroy(gameObject);
         }

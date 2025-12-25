@@ -14,10 +14,19 @@ public class SwordHitbox : MonoBehaviour
             return;
 
         Enemy enemy = other.GetComponentInParent<Enemy>();
+        WeaponStats weaponStats = other.GetComponent<WeaponStats>();
+
         if (enemy != null)
         {
             enemy.TakeDamage(Damage);
-            enemy.ApplyKnockback();
+
+            // Knockback
+            KnockbackReceiver kb = enemy.GetComponent<KnockbackReceiver>();
+            if (kb != null)
+            {
+                Vector2 dir = (enemy.transform.position - transform.position).normalized;
+                kb.ApplyKnockback(dir, weaponStats.swordKnockbackForce, weaponStats.swordKnockbackDuration);
+            }
         }
 
         // For now, just debug

@@ -5,6 +5,8 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Enemy : MonoBehaviour
 {
+    public static int EnemiesAliveCount { get; private set; }
+
     [Header("Reefrences")]
     [SerializeField] private WeaponStats weaponStats;
 
@@ -16,12 +18,17 @@ public class Enemy : MonoBehaviour
     [Header("Health Settings")]
     [SerializeField] private int maxHealth = 10;
 
+    [Header("Damage Settings")]
+    [SerializeField] private int damage = 1;
+
+
     private Rigidbody2D _rb;
+    private KnockbackReceiver _enemyKnockback;
     private Coroutine _slowRoutine;     
-    private Coroutine _knockbackRoutine;
     private Vector2 direction;
 
     private int _currentHealth;
+
     private float _baseMoveSpeed;
     private bool _isDead;
     private bool _isKnockback;
@@ -30,6 +37,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _enemyKnockback = GetComponent<KnockbackReceiver>();
 
         _currentHealth = maxHealth;
         _baseMoveSpeed = moveSpeed;
@@ -51,8 +59,8 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // If we are currently in knockback, do not chase the player
-        if (_isKnockback)
+        // If enemy is under knockback, do not override velocity
+        if (_enemyKnockback != null && _enemyKnockback.IsBeingKnockedBack)
             return;
 
         // If we don't have a target, do nothing
@@ -83,10 +91,37 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        EnemiesAliveCount++;
+    }
+
+    private void OnDisable()
+    {
+        EnemiesAliveCount--;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("[Enemy] Trigger with: " + other.name);
+        PlayerHealth playerHealth = other.GetComponentInParent<PlayerHealth>();
+
+        if (playerHealth != null)
+        {
+            playerHealth.TakeDamage(damage);
+
+            // Get knockback on the player, not on the enemy
+            KnockbackReceiver playerKnockback = playerHealth.GetComponent<KnockbackReceiver>();
+            if (playerKnockback != null)
+            {
+                // Direction from enemy -> player (player gets pushed away)
+                Vector2 dir = (playerHealth.transform.position - transform.position).normalized;
+
+                playerKnockback.ApplyKnockback(dir);
+                _enemyKnockback.ApplyKnockback(-dir);
+            }
+        }
     }
+
 
     public void TakeDamage(int amount)
     {
@@ -111,101 +146,5 @@ public class Enemy : MonoBehaviour
         // TODO: play death VFX / SFX, animation, etc.
 
         Destroy(gameObject);
-    }
-
-    public void ApplyHitSlow()
-    {
-        // Stop previous slow coroutine if it is still running
-        if (_slowRoutine != null)
-        {
-            StopCoroutine(_slowRoutine);
-        }
-
-        _slowRoutine = StartCoroutine(HitSlowCoroutine());
-    }
-
-    public void ApplyKnockback()
-    {
-        if (_knockbackRoutine != null)
-            StopCoroutine(_knockbackRoutine);
-
-        _knockbackRoutine = StartCoroutine(KnockbackCoroutine());
-    }
-
-    private IEnumerator HitSlowCoroutine()
-    {
-        float finalFactor = Mathf.Clamp01(weaponStats.slowMultiplier);
-        float startFactor = 1f;
-
-        // --- RAMP IN: 1.0 -> finalFactor ---
-        if (weaponStats.slowRampInTime > 0f)
-        {
-            float t = 0f;
-            while (t < weaponStats.slowRampInTime)
-            {
-                float lerp = t / weaponStats.slowRampInTime;
-                float factor = Mathf.Lerp(startFactor, finalFactor, lerp);
-                moveSpeed = _baseMoveSpeed * factor;
-
-                t += Time.deltaTime;
-                yield return null;
-            }
-        }
-
-        // Ensure we end exactly at finalFactor
-        moveSpeed = _baseMoveSpeed * finalFactor;
-
-        // --- HOLD FULL SLOW ---
-        if (weaponStats.slowDuration > 0f)
-        {
-            float timer = 0f;
-            while (timer < weaponStats.slowDuration)
-            {
-                // Keep speed constant at the slow factor
-                moveSpeed = _baseMoveSpeed * finalFactor;
-                timer += Time.deltaTime;
-                yield return null;
-            }
-        }
-
-        // --- RAMP OUT: finalFactor -> 1.0 ---
-        if (weaponStats.slowRampOutTime > 0f)
-        {
-            float t = 0f;
-            while (t < weaponStats.slowRampOutTime)
-            {
-                float lerp = t / weaponStats.slowRampOutTime;
-                float factor = Mathf.Lerp(finalFactor, startFactor, lerp);
-                moveSpeed = _baseMoveSpeed * factor;
-
-                t += Time.deltaTime;
-                yield return null;
-            }
-        }
-
-        // Ensure we end exactly at base speed
-        moveSpeed = _baseMoveSpeed;
-        _slowRoutine = null;
-    }
-
-    private IEnumerator KnockbackCoroutine()
-    {
-        _isKnockback = true;
-
-        // Normalize direction and scale by force
-        Vector2 knockbackVelocity = -1 * direction.normalized * weaponStats.swordKnockbackForce;
-
-        float timer = 0f;
-
-        while (timer < weaponStats.swordKnockbackDuration)
-        {
-            _rb.linearVelocity = knockbackVelocity;
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
-        // Stop knockback and resume normal movement
-        _isKnockback = false;
-        _knockbackRoutine = null;
-    }
+    }    
 }

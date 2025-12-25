@@ -9,7 +9,9 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Optional offset if your sprite is not facing the +X direction by default.")]
     [SerializeField] private float aimAngleOffset = 0f;
 
+    // References
     private Rigidbody2D _rb;
+    private KnockbackReceiver _knockback;
 
     // Movement
     private Vector2 _currentVelocity;
@@ -24,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _knockback = GetComponent<KnockbackReceiver>();
 
         // Make sure gravity is disabled for top-down movement
         _rb.gravityScale = 0f;
@@ -38,6 +41,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // If enemy is under knockback, do not override velocity
+        if (_knockback != null && _knockback.IsBeingKnockedBack)
+            return;
+
         if (_isDashing)
         {
             ApplyDashMovement();

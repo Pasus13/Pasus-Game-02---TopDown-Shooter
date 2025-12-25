@@ -193,6 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 497bf58bb85a5194fb5711f1ace9204f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _weaponStats: {fileID: 11400000, guid: 9c5205d46882f7641ad82880f6ded700, type: 2}
 --- !u!70 &5956190492995601194
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

@@ -17,10 +17,8 @@ public class WeaponStats : ScriptableObject
     public int bulletDamage = 1;
     public float fireRate = 5f;
     public bool isAutomatic = false;
-    public float slowMultiplier = 0.5f; // 0.5 = 50% speed when hit
-    public float slowDuration = 0.3f;   // Seconds
-    public float slowRampInTime = 0.1f;      // Time to go from 1.0 to slowMultiplier
-    public float slowRampOutTime = 0.2f;     // Time to go back from slowMultiplier to 1.0
+    public float bulletKnockbackForce = 2f;
+    public float bulletKnockbackDuration = 0.15f;
 
     [Header("Melee Only")]
     public float swordRange = 1f;

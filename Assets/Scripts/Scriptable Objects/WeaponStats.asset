@@ -23,11 +23,11 @@ MonoBehaviour:
   slowRampInTime: 0.1
   slowRampOutTime: 0.2
   swordRange: 1
-  swordRangeMultiplier: 1
+  swordRangeMultiplier: 1.5
   swordSweepAngle: 120
   swordAttackDuration: 0.15
   swordAttackDurationMultiplier: 1
   swordCooldown: 1
   swordDamage: 5
-  swordKnockbackForce: 10
+  swordKnockbackForce: 20
   swordKnockbackDuration: 0.15
