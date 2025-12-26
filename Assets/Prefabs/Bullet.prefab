@@ -194,6 +194,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _weaponStats: {fileID: 11400000, guid: 9c5205d46882f7641ad82880f6ded700, type: 2}
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!70 &5956190492995601194
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

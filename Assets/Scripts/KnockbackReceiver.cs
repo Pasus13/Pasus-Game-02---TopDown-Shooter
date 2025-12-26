@@ -9,7 +9,6 @@ public class KnockbackReceiver : MonoBehaviour, IKnockbackable
 
     [Header("References")]
     [SerializeField] private AnimationCurve recoveryCurve;
-    [SerializeField] private WeaponStats weaponStats;
 
     private Rigidbody2D _rb;
     private Coroutine _knockCoroutine;
@@ -27,15 +26,9 @@ public class KnockbackReceiver : MonoBehaviour, IKnockbackable
             // Default: linear decay from 1 to 0
             recoveryCurve = AnimationCurve.Linear(0f, 1f, 1f, 0f);
         }
-
-        defaultForce = weaponStats.swordKnockbackForce;
-        defaultDuration = weaponStats.swordKnockbackDuration;
     }
 
 
-    /// direction: Direction of the knockback (will be normalized).
-    /// forceOverride If <= 0, uses defaultForce.
-    /// durationOverride If <= 0, uses defaultDuration.
     public void ApplyKnockback(Vector2 direction, float forceOverride = -1f, float durationOverride = -1f)
     {
         if (_rb == null)
@@ -67,11 +60,11 @@ public class KnockbackReceiver : MonoBehaviour, IKnockbackable
 
             // Apply decaying knockback velocity
             _rb.linearVelocity = knockVelocity * factor;
+            
 
             elapsed += Time.deltaTime;
             yield return null;
         }
-
         _isBeingKnockedBack = false;
     }
 }

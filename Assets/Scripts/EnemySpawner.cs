@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class EnemySpawner : MonoBehaviour
 
     private float _timer;
 
+    // Tracks alive enemies spawned by this spawner
+    private readonly List<EnemyHealth> _aliveEnemies = new();
+
     private void Update()
     {
         if (player == null || enemyPrefab == null || roomBounds == null)
@@ -35,8 +39,11 @@ public class EnemySpawner : MonoBehaviour
 
     private void TrySpawnEnemy()
     {
+        // Clean up null entries (enemies destroyed)
+        CleanupDeadReferences();
+
         // Limit number of enemies
-        if (Enemy.EnemiesAliveCount >= maxEnemiesAlive)
+        if (_aliveEnemies.Count >= maxEnemiesAlive)
             return;
 
         // Try multiple random positions around the player
@@ -53,12 +60,25 @@ public class EnemySpawner : MonoBehaviour
                 continue;
 
             // All checks passed → spawn enemy
-            Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+            GameObject enemyGO = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+
+            // Subscribe to EnemyHealth death event
+            EnemyHealth health = enemyGO.GetComponent<EnemyHealth>();
+            if (health != null)
+            {
+                health.OnEnemyDied += HandleEnemyDied;
+                _aliveEnemies.Add(health);
+            }
+            else
+            {
+                Debug.LogWarning("[EnemySpawner] Spawned enemy has no EnemyHealth component in children.");
+            }
+
             return;
         }
 
         // If we reach here, no valid position was found
-        // Debug.LogWarning("[EnemySpawner] Could not find valid spawn position.");
+        Debug.LogWarning("[EnemySpawner] Could not find valid spawn position.");
     }
 
     private Vector2 GetRandomPositionAroundPlayer()
@@ -70,6 +90,38 @@ public class EnemySpawner : MonoBehaviour
         Vector2 spawnPos = (Vector2)player.position + dir * spawnDistance;
 
         return spawnPos;
+    }
+
+    private void HandleEnemyDied(EnemyHealth deadEnemy)
+    {
+        // Unsubscribe to avoid dangling references
+        if (deadEnemy != null)
+            deadEnemy.OnEnemyDied -= HandleEnemyDied;
+
+        // Remove from alive list
+        _aliveEnemies.Remove(deadEnemy);
+    }
+
+    private void CleanupDeadReferences()
+    {
+        // Remove nulls (destroyed enemies)
+        for (int i = _aliveEnemies.Count - 1; i >= 0; i--)
+        {
+            if (_aliveEnemies[i] == null)
+                _aliveEnemies.RemoveAt(i);
+        }
+    }
+
+    private void OnDisable()
+    {
+        // Unsubscribe from all alive enemies
+        for (int i = 0; i < _aliveEnemies.Count; i++)
+        {
+            if (_aliveEnemies[i] != null)
+                _aliveEnemies[i].OnEnemyDied -= HandleEnemyDied;
+        }
+
+        _aliveEnemies.Clear();
     }
 
     private void OnDrawGizmosSelected()

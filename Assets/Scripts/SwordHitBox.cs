@@ -11,7 +11,7 @@ public class SwordHitbox : MonoBehaviour
 
     public bool CanHit { get; set; }
 
-    private readonly HashSet<Enemy> _hitThisSwing = new HashSet<Enemy>();
+    private readonly HashSet<IDamageable> _hitThisSwing = new HashSet<IDamageable>();
 
     // Call this at the start of each sword attack
     public void BeginSwing()
@@ -31,20 +31,24 @@ public class SwordHitbox : MonoBehaviour
     {
         if (!CanHit) return;
 
-        Enemy enemy = other.GetComponentInParent<Enemy>();
+        EnemyHealth enemy = other.GetComponentInParent<EnemyHealth>();
         if (enemy == null) return;
 
-        // Prevent multiple hits during the same swing
-        if (_hitThisSwing.Contains(enemy)) return;
+        IDamageable damageable = other.GetComponentInParent<IDamageable>();
+        if (damageable == null) return;
 
-        _hitThisSwing.Add(enemy);
-        enemy.TakeDamage(weaponStats.swordDamage);
+        // Prevent multiple hits during the same swing
+        if (_hitThisSwing.Contains(damageable)) return;
+
+        _hitThisSwing.Add(damageable);
+
+        damageable.TakeDamage(weaponStats.swordDamage);
 
         // Knockback
-        IKnockbackable knockbackable = enemy.GetComponent<IKnockbackable>();
+        IKnockbackable knockbackable = other.GetComponentInParent<IKnockbackable>();
         if (knockbackable != null)
         {
-            Vector2 dir = (enemy.transform.position - transform.position).normalized;
+            Vector2 dir = (other.transform.position - transform.position).normalized;
             knockbackable.ApplyKnockback(dir, weaponStats.swordKnockbackForce, weaponStats.swordKnockbackDuration);
         }
     }

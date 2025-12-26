@@ -4,6 +4,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [SerializeField] private WeaponStats _weaponStats;
+    [SerializeField] private LayerMask enemyMask;
 
     private Rigidbody2D _rb;
     private int _damage;
